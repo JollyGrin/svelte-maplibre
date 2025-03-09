@@ -106,8 +106,8 @@
 	}
 </script>
 
-<div class="fixed top-3 right-3 z-50 flex w-fit items-center gap-2">
-	<p class="rounded-lg bg-gray-200 p-2 text-xs">
+<div class="fixed top-3 right-3 z-50 flex w-fit animate-pulse items-center gap-2">
+	<p class="rounded-lg bg-blue-200 p-2 text-xs">
 		hold <span class="rounded-xs border-b-2 border-black/50 bg-white p-1">ctrl</span> & drag to tilt
 		camera
 	</p>

@@ -43,13 +43,13 @@
 <T.HemisphereLight skyColor="#87ceeb" groundColor="#8b4513" intensity={0.2} />
 
 <!-- Ground plane to receive shadows -->
-<T.Mesh position={[0, 0, 0]}>
-	<T.BoxGeometry args={[10, 10, 10]} />
+<T.Mesh position={[0, 10, 0]}>
+	<T.BoxGeometry args={[5, 20, 5]} />
 	<T.MeshStandardMaterial
 		color="#98FB98"
 		roughness={0.9}
 		metalness={0.05}
-		transparent={false}
-		opacity={1}
+		transparent={true}
+		opacity={0.5}
 	/>
 </T.Mesh>

@@ -1,10 +1,16 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
 	import { OrbitControls } from '@threlte/extras';
-
 	import { Color, FogExp2 } from 'three';
+	import { createEventDispatcher } from 'svelte';
 
 	const { scene } = useThrelte();
+	const dispatch = createEventDispatcher();
+
+	// Dispatch the scene to the parent component
+	useTask(() => {
+		dispatch('sceneCreated', { scene });
+	});
 </script>
 
 <T.PerspectiveCamera makeDefault position={[0, 10, 40]} fov={40}>

@@ -4,8 +4,13 @@
 		GeolocateControl,
 		MapLibre,
 		Marker,
-		Popup
+		Popup,
+		CustomLayer
 	} from 'svelte-maplibre-gl';
+	import maplibregl from 'maplibre-gl';
+	import * as THREE from 'three';
+	import { Canvas } from '@threlte/core';
+	import Scene from './Scene.svelte';
 
 	let lnglat = $state({ lng: 4.902, lat: 52.379 });
 	let lngLatText = $derived(`(${lnglat.lat.toFixed(3)}, ${lnglat.lng.toFixed(3)})`);
@@ -30,7 +35,78 @@
 		'bottom-left': [offset, -offset],
 		'bottom-right': [-offset, -offset]
 	});
+
+	// Custom layer implementation for Threlte integration
+	class ThrelteLayerImpl implements Omit<maplibregl.CustomLayerInterface, 'id' | 'type'> {
+		renderingMode = '3d' as const;
+		private camera = new THREE.Camera();
+		private scene = new THREE.Scene();
+		private renderer: THREE.WebGLRenderer | null = null;
+		private map: maplibregl.Map | null = null;
+		private threlteScene: THREE.Scene | null = null;
+
+		onAdd(map: maplibregl.Map, gl: WebGL2RenderingContext) {
+			this.map = map;
+
+			// Use the MapLibre GL JS map canvas for three.js
+			this.renderer = new THREE.WebGLRenderer({
+				canvas: map.getCanvas(),
+				context: gl,
+				antialias: true
+			});
+			this.renderer.autoClear = false;
+		}
+
+		// Method to set the Threlte scene
+		setThrelteScene(scene: THREE.Scene) {
+			this.threlteScene = scene;
+		}
+
+		render(_gl: WebGL2RenderingContext | WebGLRenderingContext, args: maplibregl.CustomRenderMethodInput) {
+			if (!this.threlteScene || !this.map) return;
+
+			// Use the marker's position for the 3D object
+			const modelOrigin: [number, number] = [lnglat.lng, lnglat.lat];
+			const modelAltitude = 0;
+			const scaling = 10.0; // Adjust scaling as needed
+
+			// Get the correct model matrix for the current projection
+			const modelMatrix = this.map.transform.getMatrixForModel(modelOrigin, modelAltitude);
+			const m = new THREE.Matrix4().fromArray(args.defaultProjectionData.mainMatrix);
+			const l = new THREE.Matrix4().fromArray(modelMatrix).scale(new THREE.Vector3(scaling, scaling, scaling));
+
+			this.camera.projectionMatrix = m.multiply(l);
+			this.renderer!.resetState();
+			this.renderer!.render(this.threlteScene, this.camera);
+			this.map.triggerRepaint();
+		}
+	}
+
+	const threlteLayerImpl = new ThrelteLayerImpl();
+	let sceneRef: { scene: THREE.Scene } | null = null;
+
+	// Function to connect the Threlte scene to our custom layer
+	function connectThrelteScene(scene: THREE.Scene) {
+		if (threlteLayerImpl) {
+			threlteLayerImpl.setThrelteScene(scene);
+		}
+	}
+
+	// When the Threlte scene is created, connect it to our custom layer
+	function handleSceneCreated(event: CustomEvent) {
+		sceneRef = event.detail;
+		if (sceneRef && sceneRef.scene) {
+			connectThrelteScene(sceneRef.scene);
+		}
+	}
 </script>
+
+<!-- Hidden Canvas with Threlte Scene -->
+<div class="hidden">
+	<Canvas>
+		<Scene on:sceneCreated={handleSceneCreated} />
+	</Canvas>
+</div>
 
 <MapLibre
 	class="h-screen"
@@ -89,4 +165,7 @@
 			<p>Style this however you want</p>
 		</Popup>
 	</Marker>
+	
+	<!-- Add the custom Threlte layer -->
+	<CustomLayer implementation={threlteLayerImpl} />
 </MapLibre>

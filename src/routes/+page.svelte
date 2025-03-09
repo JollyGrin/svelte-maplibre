@@ -6,6 +6,7 @@
 	let popupOpen = $state(true);
 	let offset = $state(24);
 
+	// Positions the popup beneath the arrow
 	let offsets: maplibregl.Offset = $derived({
 		top: [0, offset],
 		bottom: [0, -offset],

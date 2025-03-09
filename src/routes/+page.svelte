@@ -106,10 +106,17 @@
 	}
 </script>
 
-<div
-	class="fixed top-3 right-3 z-50 w-fit rounded-full px-3 py-2 transition-all hover:scale-110 hover:bg-orange-200"
->
-	<a href="https://github.com/JollyGrin/svelte-maplibre"> git </a>
+<div class="fixed top-3 right-3 z-50 flex w-fit items-center gap-2">
+	<p class="rounded-lg bg-gray-200 p-2 text-xs">
+		hold <span class="rounded-xs border-b-2 border-black/50 bg-white p-1">ctrl</span> & drag to tilt
+		camera
+	</p>
+	<a
+		href="https://github.com/JollyGrin/svelte-maplibre"
+		class="rounded-full px-3 py-2 transition-all hover:scale-110 hover:bg-orange-200"
+	>
+		git
+	</a>
 </div>
 
 <!-- Hidden Canvas with Threlte Scene -->

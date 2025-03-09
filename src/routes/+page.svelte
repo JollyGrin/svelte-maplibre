@@ -106,6 +106,12 @@
 	}
 </script>
 
+<div
+	class="fixed top-3 right-3 z-50 w-fit rounded-full px-3 py-2 transition-all hover:scale-110 hover:bg-orange-200"
+>
+	<a href="https://github.com/JollyGrin/svelte-maplibre"> git </a>
+</div>
+
 <!-- Hidden Canvas with Threlte Scene -->
 <div class="hidden">
 	<Canvas>

@@ -1,11 +1,27 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
-	import { OrbitControls } from '@threlte/extras';
-	import { Color, FogExp2 } from 'three';
+	import { OrbitControls, Text } from '@threlte/extras';
+	import { Color, FogExp2, Vector3 } from 'three';
 	import { createEventDispatcher } from 'svelte';
+	import { base } from '$app/paths';
 
 	const { scene } = useThrelte();
 	const dispatch = createEventDispatcher();
+
+	// Animation parameters for floating text
+	let floatY = 0;
+	let floatDirection = 0.01;
+	let textPosition: [number, number, number] = $state([0, 25, 0]);
+
+	// Animation for floating text
+	useTask((delta) => {
+		// Simple floating animation
+		floatY += floatDirection;
+		if (floatY > 1 || floatY < -1) {
+			floatDirection *= -1;
+		}
+		textPosition = [0, 10 + floatY, 0] as [number, number, number];
+	});
 
 	// Dispatch the scene to the parent component
 	useTask(() => {
@@ -42,14 +58,39 @@
 <!-- Hemisphere light for sky/ground interaction -->
 <T.HemisphereLight skyColor="#87ceeb" groundColor="#8b4513" intensity={0.2} />
 
-<!-- Ground plane to receive shadows -->
-<T.Mesh position={[0, 10, 0]}>
-	<T.BoxGeometry args={[5, 20, 5]} />
-	<T.MeshStandardMaterial
-		color="#98FB98"
-		roughness={0.9}
-		metalness={0.05}
-		transparent={true}
-		opacity={0.5}
-	/>
-</T.Mesh>
+<T.Group position={[0, 10, 0]}>
+	<T.Mesh>
+		<T.BoxGeometry args={[5, 20, 5]} />
+		<T.MeshStandardMaterial
+			color="#98FB98"
+			roughness={0.9}
+			metalness={0.05}
+			transparent={true}
+			opacity={0.5}
+		/>
+	</T.Mesh>
+
+	<!-- 3D Floating Text -->
+	<Text
+		position={[0, 10, 0]}
+		text="Hello Map!"
+		color="#ff3e00"
+		font="{base}/fonts/helvetiker_bold.typeface.json"
+		size={20}
+		height={0.5}
+		curveSegments={12}
+		bevelEnabled={true}
+		bevelThickness={0.1}
+		bevelSize={0.1}
+		bevelSegments={3}
+		castShadow
+	>
+		<T.MeshStandardMaterial
+			color="#ff3e00"
+			metalness={0.8}
+			roughness={0.2}
+			emissive="#ff3e00"
+			emissiveIntensity={0.2}
+		/>
+	</Text>
+</T.Group>

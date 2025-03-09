@@ -1,3 +1,11 @@
+# Maplibre & Threlte
+
+Used the example from svelte-maplibre-gl and modified it to work with [Threlte](https://github.com/threlte/threlte)
+
+- https://svelte-maplibre-gl.mierune.dev/examples/threejs-model
+
+---
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).

@@ -62,7 +62,10 @@
 			this.threlteScene = scene;
 		}
 
-		render(_gl: WebGL2RenderingContext | WebGLRenderingContext, args: maplibregl.CustomRenderMethodInput) {
+		render(
+			_gl: WebGL2RenderingContext | WebGLRenderingContext,
+			args: maplibregl.CustomRenderMethodInput
+		) {
 			if (!this.threlteScene || !this.map) return;
 
 			// Use the marker's position for the 3D object
@@ -73,7 +76,9 @@
 			// Get the correct model matrix for the current projection
 			const modelMatrix = this.map.transform.getMatrixForModel(modelOrigin, modelAltitude);
 			const m = new THREE.Matrix4().fromArray(args.defaultProjectionData.mainMatrix);
-			const l = new THREE.Matrix4().fromArray(modelMatrix).scale(new THREE.Vector3(scaling, scaling, scaling));
+			const l = new THREE.Matrix4()
+				.fromArray(modelMatrix)
+				.scale(new THREE.Vector3(scaling, scaling, scaling));
 
 			this.camera.projectionMatrix = m.multiply(l);
 			this.renderer!.resetState();
@@ -156,7 +161,7 @@
 	<Marker bind:lnglat draggable>
 		{#snippet content()}
 			<div class="text-center leading-none">
-				<div class="text-3xl">🐶</div>
+				<div class="text-3xl">📍</div>
 				<div class="font-bold text-white drop-shadow-xs">{lngLatText}</div>
 			</div>
 		{/snippet}
@@ -165,7 +170,7 @@
 			<p>Style this however you want</p>
 		</Popup>
 	</Marker>
-	
+
 	<!-- Add the custom Threlte layer -->
 	<CustomLayer implementation={threlteLayerImpl} />
 </MapLibre>

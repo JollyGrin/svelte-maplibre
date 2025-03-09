@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
-	import { OrbitControls, Text } from '@threlte/extras';
+	import { OrbitControls, Text, Text3DGeometry } from '@threlte/extras';
 	import { Color, FogExp2, Vector3 } from 'three';
 	import { createEventDispatcher } from 'svelte';
 	import { base } from '$app/paths';
@@ -69,28 +69,8 @@
 			opacity={0.5}
 		/>
 	</T.Mesh>
-
-	<!-- 3D Floating Text -->
-	<Text
-		position={[0, 10, 0]}
-		text="Hello Map!"
-		color="#ff3e00"
-		font="{base}/fonts/helvetiker_bold.typeface.json"
-		size={20}
-		height={0.5}
-		curveSegments={12}
-		bevelEnabled={true}
-		bevelThickness={0.1}
-		bevelSize={0.1}
-		bevelSegments={3}
-		castShadow
-	>
-		<T.MeshStandardMaterial
-			color="#ff3e00"
-			metalness={0.8}
-			roughness={0.2}
-			emissive="#ff3e00"
-			emissiveIntensity={0.2}
-		/>
-	</Text>
+	<T.Mesh position={[-30, -10, -30]}>
+		<Text3DGeometry text={'Amsterdam'} size={10} depth={5} />
+		<T.MeshStandardMaterial color="#FD3F00" toneMapped={false} metalness={0.2} roughness={0.8} />
+	</T.Mesh>
 </T.Group>
